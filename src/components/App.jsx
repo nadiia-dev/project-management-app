@@ -1,5 +1,11 @@
+import ProjectsSidebar from "./ProjectsSidebar";
+
 function App() {
-  return <div>App</div>;
+  return (
+    <main>
+      <ProjectsSidebar />
+    </main>
+  );
 }
 
 export default App;
