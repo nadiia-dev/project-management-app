@@ -95,7 +95,7 @@ function App() {
   );
 
   let content = (
-    <Context.Provider
+    <Context
       value={{
         handleAddTask,
         handleDeleteTask,
@@ -103,7 +103,7 @@ function App() {
       }}
     >
       <SelectedProject project={selectedProject} onDelete={onDeleteProject} />
-    </Context.Provider>
+    </Context>
   );
 
   if (projectsState.selectedProjectId === null) {
