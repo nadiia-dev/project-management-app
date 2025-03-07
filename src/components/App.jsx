@@ -33,20 +33,30 @@ function App() {
   };
 
   const handleSelectProject = (id) => {
-    console.log(id);
     setProjectsState((prevState) => {
       return { ...prevState, selectedProjectId: id };
+    });
+  };
+
+  const onDeleteProject = () => {
+    setProjectsState((prevState) => {
+      return {
+        ...prevState,
+        selectedProjectId: undefined,
+        projects: prevState.projects.filter(
+          (project) => project.id !== prevState.selectedProjectId
+        ),
+      };
     });
   };
 
   const selectedProject = projectsState.projects.find(
     (project) => project.id === projectsState.selectedProjectId
   );
-  console.log(projectsState.projects);
-  console.log(selectedProject);
-  console.log(projectsState.selectedProjectId);
 
-  let content = <SelectedProject project={selectedProject} />;
+  let content = (
+    <SelectedProject project={selectedProject} onDelete={onDeleteProject} />
+  );
 
   if (projectsState.selectedProjectId === null) {
     content = (
