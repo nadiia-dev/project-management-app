@@ -25,8 +25,6 @@ function App() {
     });
   };
 
-  console.log(projectsState);
-
   let content;
 
   if (projectsState.selectedProjectId === null) {
@@ -37,7 +35,10 @@ function App() {
 
   return (
     <main className="h-screen my-8 flex gap-8">
-      <ProjectsSidebar onButtonClick={onButtonClick} />
+      <ProjectsSidebar
+        onButtonClick={onButtonClick}
+        projects={projectsState.projects}
+      />
       {content}
     </main>
   );
