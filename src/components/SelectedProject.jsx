@@ -15,7 +15,7 @@ const SelectedProject = ({ project, onDelete }) => {
           </h1>
           <button
             onClick={onDelete}
-            className="text-stone-600 hover:text-stone-950"
+            className="text-stone-600 hover:text-red-500"
           >
             Delete
           </button>

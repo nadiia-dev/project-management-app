@@ -8,10 +8,6 @@ const NewTask = () => {
     setEnteredTask(e.target.value);
   };
 
-  const handleClick = () => {
-    setEnteredTask("");
-  };
-
   return (
     <Context.Consumer>
       {({ handleAddTask }) => (
@@ -24,7 +20,8 @@ const NewTask = () => {
           />
           <button
             onClick={() => {
-              handleClick();
+              if (enteredTask.trim() === "") return;
+              setEnteredTask("");
               handleAddTask(enteredTask);
             }}
             className="text-stone-700 hover:text-stone-950"

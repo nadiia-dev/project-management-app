@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NewProject from "./NewProject";
 import NoProjectSelected from "./NoProjectSelected";
 import ProjectsSidebar from "./ProjectsSidebar";
@@ -6,11 +6,23 @@ import SelectedProject from "./SelectedProject";
 import { Context } from "./Context";
 
 function App() {
-  const [projectsState, setProjectsState] = useState({
-    selectedProjectId: undefined,
-    projects: [],
-    tasks: [],
-  });
+  const loadDataFromLocalStorage = () => {
+    const savedData = localStorage.getItem("projectsState");
+    if (savedData) {
+      return JSON.parse(savedData);
+    }
+    return {
+      selectedProjectId: undefined,
+      projects: [],
+      tasks: [],
+    };
+  };
+
+  const [projectsState, setProjectsState] = useState(loadDataFromLocalStorage);
+
+  useEffect(() => {
+    localStorage.setItem("projectsState", JSON.stringify(projectsState));
+  }, [projectsState]);
 
   const onButtonClick = () => {
     setProjectsState((prevState) => {
@@ -78,9 +90,17 @@ function App() {
     (project) => project.id === projectsState.selectedProjectId
   );
 
+  const currentTasks = projectsState.tasks.filter(
+    (task) => task.projectId === selectedProject?.id
+  );
+
   let content = (
     <Context.Provider
-      value={{ handleAddTask, handleDeleteTask, tasks: projectsState.tasks }}
+      value={{
+        handleAddTask,
+        handleDeleteTask,
+        tasks: currentTasks,
+      }}
     >
       <SelectedProject project={selectedProject} onDelete={onDeleteProject} />
     </Context.Provider>
