@@ -3,11 +3,13 @@ import NewProject from "./NewProject";
 import NoProjectSelected from "./NoProjectSelected";
 import ProjectsSidebar from "./ProjectsSidebar";
 import SelectedProject from "./SelectedProject";
+import { Context } from "./Context";
 
 function App() {
   const [projectsState, setProjectsState] = useState({
     selectedProjectId: undefined,
     projects: [],
+    tasks: [],
   });
 
   const onButtonClick = () => {
@@ -50,12 +52,31 @@ function App() {
     });
   };
 
+  const handleAddTask = (text) => {
+    setProjectsState((prevState) => {
+      const newTask = {
+        id: Math.random(),
+        text,
+        projectId: prevState.selectedProjectId,
+      };
+      return {
+        ...prevState,
+        tasks: [newTask, ...prevState.tasks],
+      };
+    });
+  };
+  const handleDeleteTask = () => {};
+
   const selectedProject = projectsState.projects.find(
     (project) => project.id === projectsState.selectedProjectId
   );
 
   let content = (
-    <SelectedProject project={selectedProject} onDelete={onDeleteProject} />
+    <Context.Provider
+      value={{ handleAddTask, handleDeleteTask, tasks: projectsState.tasks }}
+    >
+      <SelectedProject project={selectedProject} onDelete={onDeleteProject} />
+    </Context.Provider>
   );
 
   if (projectsState.selectedProjectId === null) {
