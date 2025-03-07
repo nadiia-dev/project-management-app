@@ -15,15 +15,30 @@ function App() {
     });
   };
 
+  const onAddProject = (title, description, dueTo) => {
+    const newProject = { id: Math.random(), title, description, dueTo };
+    setProjectsState((prevState) => {
+      return {
+        ...prevState,
+        projects: [...prevState.projects, newProject],
+      };
+    });
+  };
+
+  console.log(projectsState);
+
+  let content;
+
+  if (projectsState.selectedProjectId === null) {
+    content = <NewProject handleAddProject={onAddProject} />;
+  } else if (projectsState.selectedProjectId === undefined) {
+    content = <NoProjectSelected onButtonClick={onButtonClick} />;
+  }
+
   return (
     <main className="h-screen my-8 flex gap-8">
       <ProjectsSidebar onButtonClick={onButtonClick} />
-
-      {projectsState.selectedProjectId === null ? (
-        <NewProject />
-      ) : (
-        <NoProjectSelected onButtonClick={onButtonClick} />
-      )}
+      {content}
     </main>
   );
 }
