@@ -1,36 +1,38 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Input from "./Input";
 import Modal from "./Modal";
+import { projectValidationSchema } from "../utils/validation";
 
 const NewProject = ({ handleAddProject, handleCancel }) => {
+  const [errorMessage, setErrorMessage] = useState("");
+
   const modalRef = useRef();
   const titleRef = useRef(null);
   const descRef = useRef(null);
   const dateRef = useRef(null);
 
   const handleSave = () => {
-    if (
-      titleRef.current.value.trim() === "" ||
-      descRef.current.value.trim() === "" ||
-      dateRef.current.value.trim() === ""
-    ) {
-      modalRef.current.open();
-      return;
-    }
-    handleAddProject(
-      titleRef.current.value,
-      descRef.current.value,
-      dateRef.current.value
-    );
+    const title = titleRef.current.value;
+    const description = descRef.current.value;
+    const dueTo = dateRef.current.value;
+
+    projectValidationSchema
+      .validate({ title, description, dueTo })
+      .then(() => {
+        handleAddProject(title, description, dueTo);
+        setErrorMessage("");
+      })
+      .catch((err) => {
+        setErrorMessage(err.message);
+        modalRef.current.open();
+      });
   };
 
   return (
     <>
       <Modal ref={modalRef} buttonContent="Okay">
         <h2 className="my-4 text-xl font-bold text-stone-700">Invalid input</h2>
-        <p className="text-stone-600 mb-4">
-          Oops... looks like you fogot to enter a value
-        </p>
+        <p className="text-stone-600 mb-4">{errorMessage}</p>
         <p className="text-stone-600 mb-4">
           Please make sure to provide a valid value for every input field
         </p>
@@ -47,7 +49,7 @@ const NewProject = ({ handleAddProject, handleCancel }) => {
           </li>
           <li>
             <button
-              onClick={() => handleSave()}
+              onClick={handleSave}
               className="px-6 py-2 bg-stone-800 text-stone-50 hover:bg-stone-950 rounded-md"
             >
               Save
