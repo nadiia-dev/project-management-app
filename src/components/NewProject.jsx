@@ -5,8 +5,8 @@ import { projectValidationSchema } from "../utils/validation";
 
 const NewProject = ({ handleAddProject, handleCancel }) => {
   const [errorMessage, setErrorMessage] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
 
-  const modalRef = useRef();
   const titleRef = useRef(null);
   const descRef = useRef(null);
   const dateRef = useRef(null);
@@ -24,13 +24,17 @@ const NewProject = ({ handleAddProject, handleCancel }) => {
       })
       .catch((err) => {
         setErrorMessage(err.message);
-        modalRef.current.open();
+        setIsOpen(true);
       });
   };
 
   return (
     <>
-      <Modal ref={modalRef} buttonContent="Okay">
+      <Modal
+        buttonContent="Okay"
+        open={isOpen}
+        onClose={() => setIsOpen(false)}
+      >
         <h2 className="my-4 text-xl font-bold text-stone-700">Invalid input</h2>
         <p className="text-stone-600 mb-4">{errorMessage}</p>
         <p className="text-stone-600 mb-4">
